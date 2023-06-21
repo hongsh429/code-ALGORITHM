@@ -1,59 +1,71 @@
 class Solution {
     public String solution(String new_id) {
-        //1단계
-        new_id = new_id.toLowerCase();
 
-        //2단계
-        new_id = new_id.replaceAll("[^a-z0-9_.-]", ""); // \W:알파벳이나 숫자가 아닌 나머지문자, \w :알파벳이나 숫자
-        System.out.println("2단계 : new_id = " + new_id);
+        String s = new KAKAOID(new_id)
+                .replaceToLowerCase()
+                .filter()
+                .toSingleDot()
+                .noStartEndDot()
+                .noBlank()
+                .noGreaterThan16()
+                .noLessThan2()
+                .getResult();
 
-        //3단계
-        StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(new_id.charAt(0));
+        return s;
+    }
 
-        for (int i = 1; i < new_id.length(); i++) {
-            if (new_id.charAt(i) == '.' && new_id.charAt(i - 1) == '.') {
-                stringBuilder = stringBuilder;
-            } else {
-                stringBuilder.append(new_id.charAt(i));
+    private static class KAKAOID {
+        private String s;
+
+        KAKAOID(String s) {
+            this.s = s;
+        }
+
+        private KAKAOID replaceToLowerCase() {
+            s = s.toLowerCase();
+            return this;
+        }
+
+        private KAKAOID filter() {
+            s = s.replaceAll("[^a-z0-9._-]", "");
+            return this;
+        }
+
+        private KAKAOID toSingleDot() {
+            s = s.replaceAll("[.]{2,}", ".");
+            return this;
+        }
+
+        private KAKAOID noStartEndDot() {
+            s = s.replaceAll("^[.]|[.]$", "");
+            return this;
+        }
+
+        private KAKAOID noBlank() {
+            s = s.isEmpty() ? "a" : s;
+            return this;
+        }
+
+        private KAKAOID noGreaterThan16() {
+            if (s.length() >= 16) {
+                s = s.substring(0, 15);
             }
+            s = s.replaceAll("[.]$", "");
+            return this;
         }
 
-        new_id = stringBuilder.toString();
-        System.out.println("3단계 : new_id = " + new_id);
-        //4단계
-        if (new_id.equals(".")) {
-            new_id = "";
-        } else {
-            if (new_id.charAt(0) == '.') new_id = new_id.substring(1);
-            if (new_id.charAt(new_id.length() - 1) == '.') new_id = new_id.substring(0, new_id.length() - 1);
-        }
-
-        System.out.println("4단계 : new_id = " + new_id);
-
-        //5단계
-        if (new_id.equals("")) new_id = "a";
-        System.out.println("5단계 : new_id = " + new_id);
-
-        //6단계
-        if (new_id.length() >= 16) {
-            new_id = new_id.substring(0, 15);
-        }
-
-        if (new_id.charAt(new_id.length() - 1) == '.') new_id = new_id.substring(0, new_id.length() - 1);
-
-        System.out.println("6단계 : new_id = " + new_id);
-
-        //7단계
-        if (new_id.length() <= 2) {
-            while (new_id.length() < 3) {
-                new_id += new_id.charAt(new_id.length() - 1);
+        private KAKAOID noLessThan2() {
+            StringBuilder sBuilder = new StringBuilder(s);
+            while (sBuilder.length() <= 2) {
+                sBuilder.append(sBuilder.charAt(sBuilder.length() - 1));
             }
+            s = sBuilder.toString();
+            return this;
         }
 
-        System.out.println("7단계 : new_id = " + new_id);
-
-        return new_id;
+        private String getResult() {
+            return s;
+        }
     }
 }

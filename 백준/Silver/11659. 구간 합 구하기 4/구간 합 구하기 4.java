@@ -28,10 +28,10 @@ public class Main {
 
 
         for (int i = 0; i < rowCount; i++) {
-            String[] row = br.readLine().split(" ");
+            StringTokenizer row = new StringTokenizer(br.readLine());
             int output = 0;
-            int start = Integer.parseInt(row[0]) - 1;
-            int end = Integer.parseInt(row[1]) - 1;
+            int start = Integer.parseInt(row.nextToken()) - 1;
+            int end = Integer.parseInt(row.nextToken()) - 1;
             if (start == 0) {
                 output = sumArray[end];
             } else {

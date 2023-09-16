@@ -1,21 +1,24 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+    // 상하좌우 탐색
+    public static int[] dx = {0, 1, 0, -1};
+    public static int[] dy = {1, 0, -1, 0};
 
-    static int[] dx = new int[]{0, 1, 0, -1};
-    static int[] dy = new int[]{1, 0, -1, 0};
+    public static boolean[][] VISITED;
+    public static int[][] LIST;
 
-    static int[][] LIST;
-    static boolean[][] VISITED;
+    public static int N, M;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int T = Integer.parseInt(br.readLine());
-
 
 
         StringBuilder builder = new StringBuilder();
@@ -41,7 +44,7 @@ public class Main {
                 for (int k = 0; k < w; k++) {
                     if (!VISITED[j][k] && LIST[j][k] != 0) {
                         bug++;
-                        DFS(j, k);
+                        BFS(j, k);
                     }
                 }
             }
@@ -50,23 +53,25 @@ public class Main {
         }
 
         System.out.println(builder.toString());
-
     }
 
-    private static void DFS(int h, int w) {
-        if (VISITED[h][w]) {
-            return;
-        }
-        VISITED[h][w] = true;
+    private static void BFS(int h, int w) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{h, w});
 
-        for (int i = 0; i < 4; i++) {
-            int newH = h + dy[i];
-            int newW = w + dx[i];
-            if(newH < 0 || newW < 0) continue;
-            if(newH > LIST.length -1 || newW > LIST[0].length - 1) continue;
-            if(LIST[newH][newW] == 0 || VISITED[newH][newW]) continue;
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+            for (int i = 0; i < 4; i++) {
 
-            DFS(newH, newW);
+                int newH = now[0] + dy[i];
+                int newW = now[1] + dx[i];
+
+                if (newH < 0 || newW < 0) continue;
+                if (newH > LIST.length - 1 || newW > LIST[0].length - 1) continue;
+                if (LIST[newH][newW] == 0 || VISITED[newH][newW]) continue;
+                VISITED[newH][newW] = true;
+                queue.offer(new int[]{newH, newW});
+            }
         }
     }
 }
